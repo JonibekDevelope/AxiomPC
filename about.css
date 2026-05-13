@@ -1,0 +1,104 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: #0a0813;
+}
+
+.container{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    height: 100vh;
+}
+
+.text{
+    color: #fff;
+    font-size: 2em;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+
+}
+
+.left-top{
+    width: 700px;
+    border: 1px solid #949494;
+    margin: 0px 100px;
+    padding: 50px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    border-radius: 30px;
+    font-size: 14px;
+        backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(165, 165, 165, 0.1);
+}
+
+.right{
+    border: 1px solid #6e6e6e;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(165, 165, 165, 0.1);
+    margin: 0px 60px;
+    padding: 20px;
+    border-radius: 30px;
+    width: 500px;
+    height: 600px;
+    justify-content: center;
+    align-items: center;
+display: flex;
+flex-direction: column;
+} 
+
+.right h1{
+    color: #747474;
+    font-size: 2em;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.textt{
+    color: #fff;
+    font-size: 1.2em;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.right p{
+    color: #a5a4a4;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.inputs input{
+    width: 100%;
+    padding: 10px;
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-color: #353535;
+
+}
+
+.inputs textarea{
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8b8b8b   ;
+    color: #0a0813;
+    font-size: 1.5em;
+    cursor: pointer;
+    outline: none;
+}
+
+.inputs ::placeholder{
+    color: #ffffff;
+}
