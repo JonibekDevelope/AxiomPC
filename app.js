@@ -1,7 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
-// Firebase config
+// =====================
+// FIREBASE CONFIG
+// =====================
 const firebaseConfig = {
   apiKey: "AIzaSyC3AQfg6z3utMy0AkFDvSR-VYNyRL4hyz8",
   authDomain: "axiompc-ddc28.firebaseapp.com",
@@ -15,19 +17,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // =====================
-// AUTH CHECK
-// =====================
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    window.location.href = "./login.html";
-  } else {
-    console.log("Logged in:", user.email);
-    loadProducts();
-  }
-});
-
-// =====================
-// DOM
+// DOM (HTML MOS)
 // =====================
 const productsContainer = document.getElementById("productCards");
 const searchInput = document.querySelector(".header-center input");
@@ -35,7 +25,19 @@ const searchInput = document.querySelector(".header-center input");
 let allProducts = [];
 
 // =====================
-// API FETCH
+// AUTH CHECK
+// =====================
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "./login.html";
+  } else {
+    console.log("Logged in:", user.email);
+    fetchProducts();
+  }
+});
+
+// =====================
+// FETCH PRODUCTS (API)
 // =====================
 async function fetchProducts() {
   try {
@@ -46,7 +48,11 @@ async function fetchProducts() {
     renderProducts(allProducts);
 
   } catch (err) {
-    productsContainer.innerHTML = "<h2 style='color:white'>Error loading products</h2>";
+    productsContainer.innerHTML = `
+      <h2 style="color:white; text-align:center;">
+        Product yuklanmadi
+      </h2>
+    `;
   }
 }
 
@@ -59,7 +65,7 @@ function renderProducts(products) {
   products.forEach(product => {
     productsContainer.innerHTML += `
       <div class="card">
-        <img src="${product.thumbnail}" alt="${product.title}" />
+        <img src="${product.thumbnail}" alt="${product.title}">
 
         <div class="card-body">
           <h2>${product.title}</h2>
@@ -67,7 +73,9 @@ function renderProducts(products) {
 
           <div class="price-box">
             <span>$${product.price}</span>
-            <button onclick="addToCart(${product.id})">Sotib olish</button>
+            <button onclick="addToCart(${product.id})">
+              Sotib olish
+            </button>
           </div>
         </div>
       </div>
@@ -76,7 +84,7 @@ function renderProducts(products) {
 }
 
 // =====================
-// SEARCH
+// SEARCH (HTML input bilan)
 // =====================
 if (searchInput) {
   searchInput.addEventListener("input", (e) => {
@@ -91,22 +99,7 @@ if (searchInput) {
 }
 
 // =====================
-// LOAD PRODUCTS
-// =====================
-function loadProducts() {
-  fetchProducts();
-}
-
-// =====================
-// LOGOUT (optional)
-// =====================
-window.logout = async () => {
-  await signOut(auth);
-  window.location.href = "./login.html";
-};
-
-// =====================
-// SIMPLE CART (localStorage)
+// CART SYSTEM
 // =====================
 window.addToCart = (id) => {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -117,5 +110,13 @@ window.addToCart = (id) => {
 
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  alert("Savatga qo‘shildi");
+  alert("Savatga qo‘shildi!");
+};
+
+// =====================
+// LOGOUT (ixtiyoriy)
+// =====================
+window.logout = async () => {
+  await signOut(auth);
+  window.location.href = "./login.html";
 };
