@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC3AQfg6z3utMy0AkFDvSR-VYNyRL4hyz8",
   authDomain: "axiompc-ddc28.firebaseapp.com",
@@ -16,33 +17,56 @@ const firebaseConfig = {
   measurementId: "G-RNYHJ09LMB"
 };
 
+// init
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-/* GOOGLE LOGIN */
-document.getElementById("googleLogin").addEventListener("click", async () => {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    localStorage.setItem("user", JSON.stringify(result.user));
-    window.location.href = "/index.html";
-  } catch (e) {
-    alert(e.message);
-  }
-});
 
-/* EMAIL LOGIN */
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+// =======================
+// GOOGLE LOGIN
+// =======================
+const googleBtn = document.getElementById("googleLogin");
 
-  const email = e.target.email.value;
-  const password = e.target.password.value;
+if (googleBtn) {
+  googleBtn.addEventListener("click", async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
 
-  try {
-    const userCred = await signInWithEmailAndPassword(auth, email, password);
-    localStorage.setItem("user", JSON.stringify(userCred.user));
-    window.location.href = "/index.html";
-  } catch (e) {
-    alert("Login xato");
-  }
-});
+      localStorage.setItem("user", JSON.stringify(result.user));
+
+      window.location.href = "./index.html";
+
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    }
+  });
+}
+
+
+// =======================
+// EMAIL LOGIN
+// =======================
+const form = document.getElementById("loginForm");
+
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = form.email.value;
+    const password = form.password.value;
+
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+
+      localStorage.setItem("user", JSON.stringify(userCred.user));
+
+      window.location.href = "./index.html";
+
+    } catch (error) {
+      console.log(error);
+      alert("Login xato yoki user topilmadi");
+    }
+  });
+}
