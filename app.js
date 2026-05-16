@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC3AQfg6z3utMy0AkFDvSR-VYNyRL4hyz8",
   authDomain: "axiompc-ddc28.firebaseapp.com",
@@ -8,49 +9,65 @@ const firebaseConfig = {
   storageBucket: "axiompc-ddc28.firebasestorage.app",
   messagingSenderId: "401743424154",
   appId: "1:401743424154:web:7370488e0f6800b62c4d23",
-  measurementId: "G-RNYHJ09LMB"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// ✅ AUTH CHECK (TO‘G‘RI YO‘L)
+// =====================
+// AUTH CHECK
+// =====================
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "./login.html";
   } else {
     console.log("Logged in:", user.email);
-    loadProducts(); // faqat login bo‘lsa ishlaydi
+    loadProducts();
   }
 });
 
+// =====================
+// DOM
+// =====================
 const productsContainer = document.getElementById("productCards");
 const searchInput = document.querySelector(".header-center input");
 
 let allProducts = [];
 
-// API
-async function getProducts() {
-  const response = await fetch("https://dummyjson.com/products");
-  const data = await response.json();
-  allProducts = data.products;
-  renderProducts(allProducts);
+// =====================
+// API FETCH
+// =====================
+async function fetchProducts() {
+  try {
+    const res = await fetch("https://dummyjson.com/products");
+    const data = await res.json();
+
+    allProducts = data.products;
+    renderProducts(allProducts);
+
+  } catch (err) {
+    productsContainer.innerHTML = "<h2 style='color:white'>Error loading products</h2>";
+  }
 }
 
-// render
+// =====================
+// RENDER CARDS
+// =====================
 function renderProducts(products) {
   productsContainer.innerHTML = "";
 
   products.forEach(product => {
     productsContainer.innerHTML += `
       <div class="card">
-        <img src="${product.thumbnail}" />
+        <img src="${product.thumbnail}" alt="${product.title}" />
+
         <div class="card-body">
           <h2>${product.title}</h2>
           <p>${product.description.slice(0, 60)}...</p>
+
           <div class="price-box">
             <span>$${product.price}</span>
-            <button>Sotib olish</button>
+            <button onclick="addToCart(${product.id})">Sotib olish</button>
           </div>
         </div>
       </div>
@@ -58,17 +75,47 @@ function renderProducts(products) {
   });
 }
 
-// search
+// =====================
+// SEARCH
+// =====================
 if (searchInput) {
   searchInput.addEventListener("input", (e) => {
     const value = e.target.value.toLowerCase();
+
     const filtered = allProducts.filter(p =>
       p.title.toLowerCase().includes(value)
     );
+
     renderProducts(filtered);
   });
 }
 
+// =====================
+// LOAD PRODUCTS
+// =====================
 function loadProducts() {
-  getProducts();
+  fetchProducts();
 }
+
+// =====================
+// LOGOUT (optional)
+// =====================
+window.logout = async () => {
+  await signOut(auth);
+  window.location.href = "./login.html";
+};
+
+// =====================
+// SIMPLE CART (localStorage)
+// =====================
+window.addToCart = (id) => {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const product = allProducts.find(p => p.id === id);
+
+  cart.push(product);
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert("Savatga qo‘shildi");
+};
